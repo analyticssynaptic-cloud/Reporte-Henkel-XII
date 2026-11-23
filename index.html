@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="henkel-plantilla" content="oficial-v1">
+<title>Henkel GLISS · Intelligence Report</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root {
+    --p-navy: #241c1c; --p-deep: #a30000; --p-blue: #E1000F; --p-sky: #ff5c5c; --p-aqua: #ff4b4b; --p-mint: #ffdede;
+    --p-fresh: #fff0f0; --p-white: #ffffff; --p-gray: #8a7a7b; --p-gray2: #cdc0c1;
+    --p-border: #ecd8d8; --p-line: #f1e8e8; --p-soft: #f6f5f5; --p-green: #0e7a5f; --p-orange: #a86a1a;
+    --p-red: #7a2020; --p-gold: #a37b3a; --p-plum: #6b4e88; --p-graddark: #7a0000;
+}
+* { box-sizing: border-box; }
+html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--p-soft); color: var(--p-navy); margin: 0; padding: 0; overflow-x: hidden; letter-spacing: -0.005em; }
+
+.hero { height: 480px; background: radial-gradient(circle at 80% 15%, rgba(255,255,255,0.14), transparent 55%), linear-gradient(140deg, var(--p-aqua) 0%, var(--p-blue) 55%, var(--p-graddark) 100%); display: flex; align-items: center; justify-content: center; text-align: center; color: white; position: relative; }
+.hero::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 5px; background: linear-gradient(90deg, var(--p-graddark), var(--p-blue), var(--p-sky)); }
+.hero::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 120px; background: linear-gradient(180deg, transparent, var(--p-soft)); }
+.hero-topbar { position: absolute; top: 30px; left: 50px; right: 50px; display: flex; justify-content: space-between; align-items: center; font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase; color: rgba(255, 255, 255, 0.72); font-weight: 600; z-index: 3; }
+.hero-topbar .brand-mark { display: inline-flex; align-items: center; gap: 12px; }
+.hero-topbar .brand-mark .mk { width: 32px; height: 32px; border: 1.5px solid rgba(255, 255, 255, 0.85); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 0.85rem; }
+.hero-topbar .meta { display: flex; gap: 40px; }
+.hero-topbar .meta div span:first-child { color: rgba(255, 255, 255, 0.55); margin-right: 8px; }
+.hero-content { position: relative; z-index: 2; padding: 0 40px; max-width: 1080px; }
+.hero .brand-line { font-size: 0.75rem; letter-spacing: 8px; text-transform: uppercase; color: var(--p-fresh); font-weight: 700; margin-bottom: 22px; }
+.hero h1 { font-size: 4.6rem; font-weight: 900; margin: 0; letter-spacing: -3px; line-height: 1; text-shadow: 0 4px 30px rgba(0, 0, 0, 0.30); }
+.hero h1 .lit { font-weight: 300; color: rgba(255, 255, 255, 0.85); }
+.hero h1 .accent { background: linear-gradient(90deg, #ffffff, var(--p-mint)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.hero .subtitle { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 9px; margin-top: 30px; font-weight: 600; color: var(--p-fresh); }
+.hero .hero-facts { display: flex; gap: 60px; justify-content: center; margin-top: 45px; padding-top: 30px; border-top: 1px solid rgba(255, 255, 255, 0.18); max-width: 720px; margin-left: auto; margin-right: auto; }
+.hero .hero-facts div .n { font-size: 1.9rem; font-weight: 800; color: white; line-height: 1; letter-spacing: -1px; }
+.hero .hero-facts div .l { font-size: 0.66rem; letter-spacing: 2.5px; text-transform: uppercase; color: rgba(255, 255, 255, 0.72); margin-top: 8px; font-weight: 600; }
+
+.container { max-width: 1360px; margin: -80px auto 0; padding: 0 20px; position: relative; z-index: 3; }
+
+.exec-summary { background: var(--p-white); padding: 55px; border-radius: 4px; box-shadow: 0 25px 55px -10px rgba(26, 18, 16, 0.14); margin-bottom: 45px; border: 1px solid var(--p-border); position: relative; overflow: hidden; }
+.exec-summary::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--p-graddark), var(--p-blue), var(--p-sky)); }
+.exec-head { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px solid var(--p-line); padding-bottom: 24px; margin-bottom: 40px; }
+.exec-head .kicker { font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase; color: var(--p-gray); font-weight: 700; }
+.exec-head h2 { font-size: 1.6rem; margin: 0; font-weight: 800; letter-spacing: -1px; color: var(--p-navy); }
+.exec-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 36px 50px; }
+.exec-item { display: flex; gap: 20px; }
+.exec-item .ico { width: 42px; height: 42px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; background: #fdeceb; color: var(--p-blue); border-radius: 4px; font-size: 1rem; }
+.exec-item h4 { margin: 0 0 8px; color: var(--p-navy); text-transform: uppercase; font-size: 0.72rem; font-weight: 800; letter-spacing: 1.5px; }
+.exec-item p { margin: 0; font-size: 0.9rem; line-height: 1.65; color: var(--p-gray); }
+.exec-item p strong { color: var(--p-navy); font-weight: 700; }
+
+.spotlight { background: linear-gradient(140deg, var(--p-aqua) 0%, var(--p-blue) 55%, var(--p-graddark) 100%); color: white; border-radius: 4px; padding: 40px 50px; margin-bottom: 45px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 30px; box-shadow: 0 20px 45px rgba(122, 0, 0, 0.25); position: relative; overflow: hidden; }
+.spotlight::after { content: ''; position: absolute; top: -120px; right: -120px; width: 320px; height: 320px; background: radial-gradient(circle, rgba(255, 255, 255, 0.16), transparent 70%); border-radius: 50%; }
+.sp-stat { text-align: left; border-right: 1px solid rgba(255, 255, 255, 0.14); padding-right: 20px; position: relative; z-index: 1; }
+.sp-stat:last-child { border-right: none; }
+.sp-stat .sp-lbl { font-size: 0.62rem; letter-spacing: 2.5px; text-transform: uppercase; color: var(--p-fresh); font-weight: 700; margin-bottom: 14px; opacity: 0.9; }
+.sp-stat h2 { font-size: 2.5rem; font-weight: 800; margin: 0; color: white; letter-spacing: -1.5px; line-height: 1; }
+.sp-stat h2 small { font-size: 1rem; font-weight: 600; color: rgba(255, 255, 255, 0.6); margin-left: 4px; }
+.sp-stat .sp-sub { font-size: 0.75rem; color: rgba(255, 255, 255, 0.62); margin-top: 12px; line-height: 1.5; font-weight: 500; }
+
+.section-hero { display: flex; align-items: baseline; gap: 22px; margin: 65px 0 6px; }
+.section-hero .num { font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase; color: var(--p-gray); font-weight: 800; padding: 6px 12px; border: 1px solid var(--p-border); border-radius: 2px; }
+.section-title { font-size: 2.1rem; font-weight: 800; text-align: left; color: var(--p-navy); margin: 0; letter-spacing: -1.2px; line-height: 1.1; }
+.section-title em { font-style: normal; color: var(--p-blue); font-weight: 800; }
+.section-sub { color: var(--p-gray); font-size: 0.94rem; margin: 14px 0 32px; max-width: 880px; line-height: 1.65; }
+.subsection-title { font-size: 1.2rem; font-weight: 800; color: var(--p-navy); margin: 38px 0 10px; letter-spacing: -0.4px; }
+
+.kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 26px; }
+.kpi-card { background: var(--p-white); padding: 26px 24px; border-radius: 4px; border: 1px solid var(--p-border); transition: 0.2s; position: relative; }
+.kpi-card:hover { border-color: var(--p-blue); transform: translateY(-3px); box-shadow: 0 15px 30px rgba(26, 18, 16, 0.08); }
+.kpi-card::before { content: ''; position: absolute; top: 0; left: 0; height: 2px; width: 40px; background: var(--p-blue); }
+.kpi-card .k-ico { width: 32px; height: 32px; margin-bottom: 18px; display: flex; align-items: center; justify-content: center; color: var(--p-blue); font-size: 1rem; }
+.kpi-card .k-lbl { font-size: 0.66rem; font-weight: 800; color: var(--p-gray); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; }
+.kpi-card h3 { font-size: 2.3rem; margin: 0; color: var(--p-navy); font-weight: 800; letter-spacing: -1.5px; line-height: 1; }
+.kpi-card h3 small { font-size: 1rem; font-weight: 500; color: var(--p-gray); margin-left: 3px; }
+.kpi-card .k-note { font-size: 0.77rem; color: var(--p-gray); margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--p-line); line-height: 1.55; }
+.kpi-card.pos::before, .kpi-card.pos h3, .kpi-card.pos .k-ico { color: var(--p-green); }
+.kpi-card.pos::before { background: var(--p-green); }
+.kpi-card.warn::before, .kpi-card.warn h3, .kpi-card.warn .k-ico { color: var(--p-orange); }
+.kpi-card.warn::before { background: var(--p-orange); }
+.kpi-card.neg::before, .kpi-card.neg h3, .kpi-card.neg .k-ico { color: var(--p-red); }
+.kpi-card.neg::before { background: var(--p-red); }
+
+.func-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; margin-bottom: 26px; }
+.func-block { background: var(--p-white); border: 1px solid var(--p-border); border-radius: 4px; padding: 30px; border-top: 3px solid var(--p-blue); }
+.func-block.impulso { border-top-color: var(--p-orange); }
+.func-block .func-head { display: flex; align-items: center; gap: 12px; margin-bottom: 22px; }
+.func-block .func-ico { width: 36px; height: 36px; border-radius: 4px; background: #fdeceb; color: var(--p-blue); display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+.func-block.impulso .func-ico { color: var(--p-orange); background: #f7edd6; }
+.func-block h3 { margin: 0; font-size: 1.15rem; color: var(--p-navy); font-weight: 800; letter-spacing: -0.4px; }
+.func-block .func-sub { font-size: 0.62rem; letter-spacing: 2px; text-transform: uppercase; color: var(--p-gray); font-weight: 700; margin-top: 2px; }
+.func-row { display: flex; justify-content: space-between; align-items: baseline; padding: 13px 0; border-bottom: 1px solid var(--p-line); }
+.func-row:last-child { border-bottom: none; padding-bottom: 0; }
+.func-row .fr-lbl { font-size: 0.86rem; color: var(--p-gray); font-weight: 500; }
+.func-row .fr-lbl small { display: block; font-size: 0.71rem; color: var(--p-gray2); margin-top: 2px; }
+.func-row .fr-val { font-size: 1.1rem; font-weight: 800; color: var(--p-navy); font-variant-numeric: tabular-nums; }
+.func-note { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--p-line); font-size: 0.81rem; color: var(--p-gray); line-height: 1.6; }
+.func-note strong { color: var(--p-navy); }
+
+.chart-box { background: var(--p-white); padding: 34px; border-radius: 4px; border: 1px solid var(--p-border); width: 100%; margin-bottom: 26px; }
+.chart-box .cb-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
+.chart-box h3 { margin: 0; font-size: 1.1rem; color: var(--p-navy); font-weight: 800; letter-spacing: -0.5px; }
+.chart-box .cb-tag { font-size: 0.62rem; letter-spacing: 2.5px; text-transform: uppercase; color: var(--p-gray); font-weight: 700; }
+.chart-box .cb-sub { font-size: 0.84rem; color: var(--p-gray); margin: 0 0 24px; line-height: 1.6; max-width: 780px; }
+.chart-container { height: 320px; width: 100%; position: relative; }
+.chart-container-sm { height: 260px; width: 100%; position: relative; }
+.chart-split { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; margin-bottom: 26px; }
+
+.table-wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; margin-bottom: 30px; }
+.table-container { background: white; padding: 30px; border-radius: 4px; border: 1px solid var(--p-border); }
+.table-container.full { grid-column: 1 / -1; }
+.table-container h3 { margin: 0 0 4px; font-size: 1.02rem; color: var(--p-navy); font-weight: 800; letter-spacing: -0.3px; }
+.table-container .tbl-sub { margin: 0 0 18px; font-size: 0.8rem; color: var(--p-gray); line-height: 1.5; }
+.table-data { width: 100%; border-collapse: collapse; }
+.table-data th { text-align: left; padding: 11px 8px 11px 0; color: var(--p-gray); border-bottom: 1px solid var(--p-navy); font-size: 0.63rem; text-transform: uppercase; letter-spacing: 2px; font-weight: 800; }
+.table-data td { padding: 12px 8px 12px 0; border-bottom: 1px solid var(--p-line); font-size: 0.85rem; font-weight: 500; color: var(--p-navy); }
+.table-data tr:last-child td { border-bottom: none; border-top: 1px solid var(--p-navy); font-weight: 800; padding-top: 15px; color: var(--p-blue); }
+.table-data .num { text-align: right; font-variant-numeric: tabular-nums; font-weight: 700; }
+.table-data.no-total tr:last-child td { border-top: none; border-bottom: 1px solid var(--p-line); font-weight: 500; color: var(--p-navy); padding-top: 12px; }
+.table-scroll { max-height: 420px; overflow-y: auto; }
+.pill { display: inline-block; padding: 3px 10px; font-size: 0.63rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; border-radius: 2px; border: 1px solid; }
+.pill.neutral { background: var(--p-soft); color: var(--p-gray); border-color: var(--p-border); }
+.pill.accent { background: #fdeceb; color: var(--p-blue); border-color: #f6c9c5; }
+.pill.pos { background: #e0efe9; color: var(--p-green); border-color: #b8dbcc; }
+.pill.warn { background: #f7edd6; color: var(--p-orange); border-color: #e2c896; }
+.pill.neg { background: #f0dcdc; color: var(--p-red); border-color: #d9b6b6; }
+
+.strategy-box { background: linear-gradient(140deg, var(--p-aqua) 0%, var(--p-blue) 55%, var(--p-graddark) 100%); color: white; padding: 55px; border-radius: 4px; margin-bottom: 55px; position: relative; overflow: hidden; }
+.strategy-box::before { content: ''; position: absolute; top: -80px; right: -80px; width: 340px; height: 340px; background: radial-gradient(circle, rgba(255, 255, 255, 0.14), transparent 70%); border-radius: 50%; }
+.strategy-box .kick { font-size: 0.7rem; letter-spacing: 3.5px; text-transform: uppercase; color: var(--p-fresh); font-weight: 700; margin-bottom: 16px; position: relative; }
+.strategy-box h3 { font-size: 1.75rem; margin: 0 0 12px; color: white; font-weight: 800; letter-spacing: -1px; position: relative; }
+.strategy-box .sub { color: rgba(255, 255, 255, 0.75); margin: 0 0 36px; font-size: 0.96rem; max-width: 720px; line-height: 1.65; position: relative; }
+.strat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 26px; position: relative; }
+.strat-item { padding: 22px 24px; border-left: 2px solid var(--p-fresh); background: rgba(255, 255, 255, 0.02); }
+.strat-item h6 { color: var(--p-fresh); font-size: 0.66rem; margin: 0 0 10px; text-transform: uppercase; font-weight: 800; letter-spacing: 2px; display: flex; align-items: center; gap: 10px; }
+.strat-item h6 .st-ico { width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; color: var(--p-fresh); font-size: 0.82rem; }
+.strat-item p { font-size: 0.86rem; opacity: 0.9; line-height: 1.6; margin: 0; color: rgba(255, 255, 255, 0.85); }
+
+.voz-wrap { display: grid; grid-template-columns: repeat(2, 1fr); gap: 22px; margin-bottom: 30px; }
+.voz-card { border: 1px solid #ece2e2; border-left: 3px solid var(--p-blue, #E1000F); border-radius: 4px; padding: 24px 26px; background: #fff; }
+.voz-card .vz-tag { font-size: 0.62rem; letter-spacing: 2.2px; text-transform: uppercase; font-weight: 800; color: #a37b3a; margin-bottom: 10px; }
+.voz-card h4 { margin: 0 0 10px; font-size: 1.02rem; font-weight: 800; letter-spacing: -0.4px; color: #241c1c; }
+.voz-card p { margin: 0; font-size: 0.88rem; line-height: 1.7; color: #5c5050; }
+.voz-card p + p { margin-top: 10px; }
+@media (max-width: 900px) { .voz-wrap { grid-template-columns: 1fr; } }
+.foot { background: linear-gradient(140deg, var(--p-graddark), var(--p-blue) 60%, var(--p-aqua)); color: white; padding: 80px 0 40px; margin-top: 65px; width: 100vw; position: relative; left: 50%; right: 50%; margin-left: -50vw; margin-right: -50vw; }
+.foot-in { max-width: 1300px; margin: 0 auto; padding: 0 40px; }
+.foot-top { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 60px; padding-bottom: 50px; border-bottom: 1px solid rgba(255, 255, 255, 0.15); }
+.foot-brand { font-size: 2.9rem; font-weight: 900; letter-spacing: -1.5px; line-height: 1; margin: 0 0 14px; }
+.foot-brand .accent { background: linear-gradient(90deg, #ffffff, var(--p-mint)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.foot-brand-sub { font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase; color: rgba(255, 255, 255, 0.55); font-weight: 600; }
+.foot-col h6 { font-size: 0.66rem; letter-spacing: 2.5px; text-transform: uppercase; color: var(--p-fresh); font-weight: 800; margin: 0 0 16px; }
+.foot-col p { font-size: 0.86rem; line-height: 1.65; color: rgba(255, 255, 255, 0.72); margin: 0 0 8px; }
+.foot-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 24px; font-size: 0.67rem; letter-spacing: 2px; text-transform: uppercase; color: rgba(255, 255, 255, 0.42); font-weight: 600; }
+
+.carousel { max-width: 780px; margin: 0 auto 26px; }
+.car-row { display: flex; align-items: center; justify-content: center; height: 440px; }
+.car-side { width: 110px; height: 84%; flex-shrink: 0; border-radius: 4px; overflow: hidden; filter: blur(4px); opacity: 0.5; transform: scale(0.94); cursor: pointer; transition: filter .3s ease, opacity .3s ease, transform .3s ease; background: var(--p-navy); }
+.car-side:hover { opacity: 0.75; }
+.car-side img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.car-side.left { mask-image: linear-gradient(to left, rgba(0,0,0,1) 30%, rgba(0,0,0,0)); -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,1) 30%, rgba(0,0,0,0)); margin-right: -18px; }
+.car-side.right { mask-image: linear-gradient(to right, rgba(0,0,0,1) 30%, rgba(0,0,0,0)); -webkit-mask-image: linear-gradient(to right, rgba(0,0,0,1) 30%, rgba(0,0,0,0)); margin-left: -18px; }
+.car-stage { position: relative; width: 340px; max-width: 56vw; height: 100%; flex-shrink: 0; background: var(--p-navy); border-radius: 4px; overflow: hidden; cursor: pointer; box-shadow: 0 15px 35px rgba(122,0,0,0.22); z-index: 2; }
+.car-stage img { width: 100%; height: 100%; object-fit: contain; display: block; transition: opacity 0.25s ease; }
+.car-nav { position: absolute; top: 50%; transform: translateY(-50%); width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.9); color: var(--p-navy); border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 2; }
+.car-nav:hover { background: #fff; }
+.car-nav.prev { left: 12px; } .car-nav.next { right: 12px; }
+.car-counter { position: absolute; bottom: 12px; right: 14px; background: rgba(36,28,28,0.6); color: #fff; font-size: 0.7rem; font-weight: 700; padding: 4px 10px; border-radius: 20px; letter-spacing: 0.5px; }
+.car-caption { text-align: center; padding: 14px 10px 2px; }
+.car-caption #carPdv { font-size: 1rem; font-weight: 800; color: var(--p-navy); }
+.car-caption #carMeta { font-size: 0.78rem; color: var(--p-gray); margin-top: 3px; }
+
+@media (max-width: 1024px) {
+    .exec-grid, .strat-grid, .chart-split, .func-wrap { grid-template-columns: 1fr; }
+    .table-wrapper, .foot-top { grid-template-columns: 1fr; }
+    .spotlight { grid-template-columns: 1fr 1fr; }
+    .sp-stat { border-right: none; border-bottom: 1px solid rgba(255, 255, 255, 0.14); padding-bottom: 20px; }
+    .kpi-row { grid-template-columns: 1fr 1fr; }
+    .hero h1 { font-size: 2.8rem; }
+    .hero-topbar { display: none; }
+}
+@media (max-width: 640px) { .car-nav { width: 36px; height: 36px; } .car-side { display: none; } .car-stage { max-width: 88vw; } }
+
+.table-scroll{max-height:none}
+@media(max-width:1024px){.kpi-row{grid-template-columns:1fr 1fr!important}}@media(max-width:640px){.kpi-row{grid-template-columns:1fr!important}.exec-summary{padding:30px 22px}}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="hero-topbar">
+    <div class="brand-mark"><div class="mk">H</div><span>Henkel GLISS · Intelligence</span></div>
+    <div class="meta"><div><span>Tipo</span><b>Lanzamiento</b></div><div><span>Cobertura</span><b>Nacional</b></div><div><span>Alcance</span><b>Interno</b></div></div>
+  </div>
+  <div class="hero-content">
+    <div class="brand-line">Portafolio GLISS · Canal Moderno y Tradicional</div>
+    <h1><span class="lit">Radar</span> <span class="accent">Nacional</span></h1>
+    <p class="subtitle" id="heroSub"></p>
+    <div class="hero-facts" id="heroFacts"></div>
+  </div>
+</header>
+<div class="container">
+  <section class="exec-summary">
+    <div class="exec-head"><span class="kicker" id="execKicker"></span><h2>Los cuatro puntos del acumulado</h2></div>
+    <div class="exec-grid" id="execGrid"></div>
+  </section>
+  <div class="spotlight" id="spotlight"></div>
+  <div id="notasDato"></div>
+  <div id="secciones"></div>
+
+  <div class="section-hero"><div class="num" id="numFotos">07</div><h2 class="section-title">Evidencia <em>fotográfica</em></h2></div>
+  <p class="section-sub">Registro fotográfico de la ejecución en punto de venta. Va rotando solo, o dale clic para pasar a la siguiente.</p>
+  <div class="carousel">
+    <div class="car-row">
+      <div class="car-side left" id="carSideLeft"><img id="carImgPrev" src="" alt="" referrerpolicy="no-referrer"></div>
+      <div class="car-stage" id="carStage">
+        <button class="car-nav prev" id="carPrev" aria-label="Anterior"><i class="fa-solid fa-chevron-left"></i></button>
+        <img id="carImg" src="" alt="" referrerpolicy="no-referrer">
+        <button class="car-nav next" id="carNext" aria-label="Siguiente"><i class="fa-solid fa-chevron-right"></i></button>
+        <div class="car-counter" id="carCounter"></div>
+      </div>
+      <div class="car-side right" id="carSideRight"><img id="carImgNext" src="" alt="" referrerpolicy="no-referrer"></div>
+    </div>
+    <div class="car-caption"><div id="carPdv"></div><div id="carMeta"></div></div>
+  </div>
+
+  <div class="section-hero"><div class="num">08</div><h2 class="section-title">Lectura del <em>corte</em></h2></div>
+  <div class="kpi-row" id="insights" style="grid-template-columns:repeat(3,1fr)"></div>
+</div>
+<footer class="foot"><div class="foot-in">
+  <div class="foot-top">
+    <div><div class="foot-brand">HENKEL<span class="accent">·</span>GLISS</div><div class="foot-brand-sub">Ejecución en Punto de Venta · Fuerza Comercial Nacional</div></div>
+    <div class="foot-col"><h6>Cobertura</h6><div id="fCob"></div></div>
+    <div class="foot-col"><h6>Metodología</h6><div id="fMet"></div></div>
+    <div class="foot-col"><h6>Emisión</h6><div id="fEmi"></div></div>
+  </div>
+  <div class="foot-bottom"><span>Henkel GLISS · Todos los derechos reservados</span><span id="fBarra"></span><span>Próxima emisión · Fin de semana siguiente</span></div>
+</div></footer>
+
+<script>
+/*DATA_START*/
+const DATA = {"informe": "XII", "titulo": "Henkel GLISS · Intelligence Report · Acumulado · 4 Sep al 22 Nov 2026", "subtitulo": "Informe de Resultados · Acumulado · 4 de septiembre al 22 de noviembre 2026", "heroFacts": [["501", "Visitas realizadas"], ["5.952", "Unidades vendidas"], ["64", "PDVs activos"], ["6", "Ciudades activas"]], "kicker": "4 de septiembre al 22 de noviembre 2026 · doce fines de semana", "puntos": [{"ico": "fa-route", "titulo": "501 visitas ejecutadas en doce fines de semana", "texto": "Entre el 4 de septiembre y el 22 de noviembre se ejecutaron <strong>501 visitas</strong> en doce fines de semana: FS1 a FS12 (31 visitas en el FS12, con 18 gestoras activas en 6 ciudades). Cobertura: 305 de 305 turnos de FS1 a FS8 con cobertura confirmada, contando reposiciones."}, {"ico": "fa-cart-shopping", "titulo": "5.952 unidades vendidas en el acumulado", "texto": "<strong>99.2% de tasa de cierre</strong> (497 de 501 visitas). El FS12 suma <strong>290 unidades</strong> en 3 días de ruta, con venta en 31 de 31 visitas (100.0% de cierre). 5.952 unidades en total: 5.235 del canal moderno y 717 del tradicional."}, {"ico": "fa-chart-pie", "titulo": "GLISS es el 92% de todo lo vendido", "texto": "GLISS acumula el <strong>91.6%</strong> de las unidades vendidas (5.453 de 5.952) y en el FS12 alcanza el 100.0% de la mezcla (290 de 290 unidades). El producto ancla sigue siendo el combo shampoo + acondicionador Ultimate Repair, con <strong>1.943 unidades</strong> acumuladas (97 en el FS12)."}, {"ico": "fa-gift", "titulo": "3.067 premios redimidos en el acumulado", "texto": "Se entregaron <strong>3.067 premios</strong> frente a 5.952 unidades vendidas: 0.52 premios por cada unidad. El FS12 aporta 157 premios (0.54 por unidad). El scrunchi es el más redimido del acumulado (918 uds.)."}], "spot": [{"lbl": "Cobertura", "val": "100", "unit": "%", "sub": "305 de 305 turnos de FS1 a FS8 con cobertura confirmada, contando reposiciones."}, {"lbl": "Tasa de cierre", "val": "99.2", "unit": "%", "sub": "Sobre las 501 visitas acumuladas"}, {"lbl": "Unidades vendidas", "val": "5.952", "unit": "", "sub": "5.235 canal moderno · 717 canal tradicional"}, {"lbl": "Participación GLISS", "val": "91.6", "unit": "%", "sub": "Por nombre de producto vendido"}, {"lbl": "Premios redimidos", "val": "3.067", "unit": "", "sub": "4 referencias del kit de impulso GLISS"}], "secciones": [{"num": "00", "titulo": "Comparativo <em>semana a semana</em>", "sub": "Cómo se comparan los doce fines de semana de ejecución, de FS1 (4-6 sep) a FS12 (20-22 nov).", "bloques": [{"tipo": "kpis", "items": [{"ico": "fa-route", "lbl": "Ruta al día", "val": "100%", "note": "305 de 305 turnos de FS1 a FS8 con cobertura confirmada, contando reposiciones."}, {"ico": "fa-location-dot", "lbl": "Visitas FS12", "val": "31", "note": "12 el viernes, 16 el sábado, 3 el domingo, en 27 PDVs."}, {"ico": "fa-cash-register", "lbl": "Tasa de cierre FS12", "val": "100.0%", "note": "Venta en 31 de 31 visitas."}]}, {"tipo": "chart", "ancho": "half", "fig": "00a", "titulo": "Unidades vendidas por día: FS1 a FS12", "sub": "Viernes, sábado y domingo de cada fin de semana. En el FS12: viernes 81, sábado 183, domingo 26.", "chart": {"type": "bar", "labels": ["FS1", "FS2", "FS3", "FS4", "FS5", "FS6", "FS7", "FS8", "FS9", "FS10", "FS11", "FS12"], "fmt": "n", "datasets": [{"label": "Viernes", "data": [80, 110, 225, 291, 146, 147, 180, 113, 155, 127, 112, 81]}, {"label": "Sábado", "data": [128, 174, 445, 291, 212, 201, 204, 111, 133, 236, 248, 183]}, {"label": "Domingo", "data": [124, 54, 338, 46, 240, 39, 222, 12, 120, 221, 177, 26]}]}}, {"tipo": "chart", "ancho": "half", "fig": "00b", "titulo": "Indicadores clave: FS1 a FS12", "sub": "Tasa de cierre y participación GLISS por fin de semana.", "chart": {"type": "line", "labels": ["FS1", "FS2", "FS3", "FS4", "FS5", "FS6", "FS7", "FS8", "FS9", "FS10", "FS11", "FS12"], "fmt": "pct", "datasets": [{"label": "Tasa de cierre", "data": [98.0, 97.4, 95.9, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0]}, {"label": "Participación GLISS", "data": [91.0, 75.4, 80.0, 71.0, 100.0, 100.0, 100.0, 99.6, 100.0, 99.8, 100.0, 100.0]}]}}, {"tipo": "tabla", "titulo": "Comparativo completo", "cols": ["Indicador", "FS1 · 4-6 sep", "FS2 · 11-13 sep", "FS3 · 18-20 sep", "FS4 · 25-27 sep", "FS5 · 2-4 oct", "FS6 · 9-11 oct", "FS7 · 16-18 oct", "FS8 · 23-25 oct", "FS9 · 30 oct-1 nov", "FS10 · 6-8 nov", "FS11 · 13-15 nov", "FS12 · 20-22 nov", "FS12 vs. FS11"], "rows": [["Visitas realizadas", "51", "39", "49", "40", "47", "31", "45", "30", "44", "48", "46", "31", "-15"], ["PDVs activos", "43", "32", "38", "36", "25", "25", "27", "26", "28", "35", "31", "27", "-4"], ["Ciudades activas", "9", "10", "11", "10", "6", "6", "6", "6", "6", "6", "6", "6", "Igual"], ["Tasa de cierre", "98%", "97.4%", "95.9%", "100%", "100%", "100%", "100%", "100%", "100%", "100%", "100%", "100%", "Igual"], ["Unidades vendidas", "332", "338", "1.008", "628", "598", "387", "606", "236", "408", "584", "537", "290", "-46.0%"], ["Unidades por visita", "6.5", "8.7", "20.6", "15.7", "12.7", "12.5", "13.5", "7.9", "9.3", "12.2", "11.7", "9.4", "-2.3"], ["Participación GLISS", "91%", "75.4%", "80%", "71%", "100%", "100%", "100%", "99.6%", "100%", "99.8%", "100%", "100%", "Igual"], ["Premios redimidos", "197", "125", "422", "279", "333", "229", "375", "110", "246", "314", "280", "157", "-43.9%"], ["Premios por unidad vendida", "0.59", "0.37", "0.42", "0.44", "0.56", "0.59", "0.62", "0.47", "0.60", "0.54", "0.52", "0.54", "+0.02"], ["Consumidores encuestados", "277", "220", "258", "197", "216", "145", "213", "134", "215", "246", "237", "176", "-25.7%"]], "scroll": true, "nota": "Corte al domingo 22 de noviembre: 31 visitas en 27 PDVs de 6 ciudades."}, {"tipo": "semana", "kicker": "FS12 · 20-22 nov 2026", "titulo": "Lo que pasó en la semana 12", "items": [{"t": "Ruta ejecutada en 6 ciudades", "p": "31 visitas en 27 PDVs (12 el viernes, 16 el sábado, 3 el domingo), con 18 gestoras activas en Bogotá, Medellín, Cali, Bucaramanga, Barranquilla y Chía."}, {"t": "100.0% de cierre · 100.0% GLISS", "p": "290 unidades y 9.4 por visita, con venta en 31 de 31 visitas. Viernes 81; Sábado 183; Domingo 26. El combo Ultimate Repair sumó 97 unidades y la mayor venta individual fue Exito Villa Mayor Wow (30 uds.)."}, {"t": "Premios entregados", "p": "Se entregaron 157 premios, 0.54 por unidad vendida. El mix quedó así: funda 50, gorro 47, cepillo 44, scrunchi 16."}, {"t": "Recepción del consumidor", "p": "De los 176 consumidores encuestados, 112 (63.6%) ya conocían la marca y 159 (90.3%) dijeron que el punto les gustó o les encantó. Opinión promedio del producto: 4.02 / 5."}, {"t": "Competencia en el punto", "p": "0 de 31 visitas (0.0%) registraron actividad de marcas competidoras."}]}, {"tipo": "semana", "kicker": "FS11 · 13-15 nov 2026", "titulo": "Lo que pasó en la semana 11", "items": [{"t": "Ruta ejecutada en 6 ciudades", "p": "46 visitas en 31 PDVs (12 el viernes, 18 el sábado, 16 el domingo), con 20 gestoras activas en Bogotá, Medellín, Chía, Barranquilla, Bucaramanga y Cali."}, {"t": "100.0% de cierre · 100.0% GLISS", "p": "537 unidades y 11.7 por visita, con venta en 46 de 46 visitas. Viernes 112; Sábado 248; Domingo 177. El combo Ultimate Repair sumó 159 unidades y la mayor venta individual fue Exito Envigado Wow (37 uds.)."}, {"t": "Premios entregados", "p": "Se entregaron 280 premios, 0.52 por unidad vendida. El mix quedó así: gorro 86, scrunchi 70, funda 66, cepillo 58."}, {"t": "Recepción del consumidor", "p": "De los 237 consumidores encuestados, 157 (66.2%) ya conocían la marca y 200 (84.4%) dijeron que el punto les gustó o les encantó. Opinión promedio del producto: 3.91 / 5."}, {"t": "Competencia en el punto", "p": "0 de 46 visitas (0.0%) registraron actividad de marcas competidoras."}]}, {"tipo": "semana", "kicker": "FS10 · 6-8 nov 2026", "titulo": "Lo que pasó en la semana 10", "items": [{"t": "Ruta ejecutada en 6 ciudades", "p": "48 visitas en 35 PDVs (15 el viernes, 17 el sábado, 16 el domingo), con 19 gestoras activas en Bogotá, Medellín, Barranquilla, Bucaramanga, Cali y Chía."}, {"t": "100.0% de cierre · 99.8% GLISS", "p": "584 unidades y 12.2 por visita, con venta en 48 de 48 visitas. Viernes 127; Sábado 236; Domingo 221. El combo Ultimate Repair sumó 197 unidades y la mayor venta individual fue Jumbo Americano (31 uds.)."}, {"t": "Premios entregados", "p": "Se entregaron 314 premios, 0.54 por unidad vendida. El mix quedó así: funda 93, scrunchi 80, cepillo 71, gorro 70."}, {"t": "Recepción del consumidor", "p": "De los 246 consumidores encuestados, 160 (65.0%) ya conocían la marca y 208 (84.6%) dijeron que el punto les gustó o les encantó. Opinión promedio del producto: 3.91 / 5."}, {"t": "Competencia en el punto", "p": "40 de 48 visitas (83.3%) registraron actividad de marcas competidoras."}]}, {"tipo": "semana", "kicker": "FS9 · 30 oct-1 nov 2026", "titulo": "Lo que pasó en la semana 9", "items": [{"t": "Ruta ejecutada en 6 ciudades", "p": "44 visitas en 28 PDVs (18 el viernes, 14 el sábado, 12 el domingo), con 20 gestoras activas en Bogotá, Medellín, Barranquilla, Cali, Bucaramanga y Chía."}, {"t": "100.0% de cierre · 100.0% GLISS", "p": "408 unidades y 9.3 por visita, con venta en 44 de 44 visitas. Viernes 155; Sábado 133; Domingo 120. El combo Ultimate Repair sumó 156 unidades y la mayor venta individual fue Farmatodo Galerias (22 uds.)."}, {"t": "Premios entregados", "p": "Se entregaron 246 premios, 0.60 por unidad vendida. El mix quedó así: scrunchi 86, funda 82, gorro 41, cepillo 37."}, {"t": "Recepción del consumidor", "p": "De los 215 consumidores encuestados, 137 (63.7%) ya conocían la marca y 179 (83.3%) dijeron que el punto les gustó o les encantó. Opinión promedio del producto: 3.99 / 5."}, {"t": "Competencia en el punto", "p": "25 de 44 visitas (56.8%) registraron actividad de marcas competidoras."}]}]}, {"num": "01", "titulo": "Eficacia de ruta <em>por canal</em>", "sub": "", "bloques": [{"tipo": "kpis", "items": [{"ico": "fa-route", "lbl": "Cobertura", "val": "100%", "note": "305 de 305 turnos de FS1 a FS8 con cobertura confirmada, contando reposiciones."}, {"ico": "fa-store", "lbl": "PDVs activos", "val": "64", "note": "27 en el FS12."}, {"ico": "fa-city", "lbl": "Ciudades activas", "val": "6", "note": "Bogotá, Medellín, Cali, Bucaramanga, Barranquilla, Chía en el FS12."}, {"ico": "fa-user-group", "lbl": "Gestoras en ruta FS12", "val": "18", "note": "Gestoras con al menos una visita en el FS12."}]}, {"tipo": "chart", "fig": "01", "titulo": "Visitas realizadas por día", "sub": "501 visitas en los 36 días de ruta.", "chart": {"type": "bar", "labels": ["4 sep", "5 sep", "6 sep", "11 sep", "12 sep", "13 sep", "18 sep", "19 sep", "20 sep", "25 sep", "26 sep", "27 sep", "2 oct", "3 oct", "4 oct", "9 oct", "10 oct", "11 oct", "16 oct", "17 oct", "18 oct", "23 oct", "24 oct", "25 oct", "30 oct", "31 oct", "1 nov", "6 nov", "7 nov", "8 nov", "13 nov", "14 nov", "15 nov", "20 nov", "21 nov", "22 nov"], "fmt": "n", "datasets": [{"label": "Visitas", "data": [16, 17, 18, 16, 16, 7, 17, 16, 16, 18, 17, 5, 14, 16, 17, 15, 14, 2, 14, 16, 15, 15, 14, 1, 18, 14, 12, 15, 17, 16, 12, 18, 16, 12, 16, 3]}]}}, {"tipo": "tabla", "titulo": "Qué pasó en cada canal", "cols": ["Canal", "PDVs activos", "Visitas", "Unidades", "Uds. / visita", "% del total"], "rows": [["Moderno", "46", "470", "5.235", "11.1", "88.0%"], ["Tradicional", "18", "31", "717", "23.1", "12.0%"]], "total": ["Total", "64", "501", "5.952", "11.9", "100%"], "nota": "El moderno mueve el 88% de las unidades; el tradicional pone la productividad por visita."}, {"tipo": "chart", "ancho": "half", "fig": "03", "titulo": "Visitas realizadas por ciudad", "sub": "Acumulado.", "chart": {"type": "bar", "horizontal": true, "labels": ["Bogotá", "Medellín", "Cali", "Bucaramanga", "Barranquilla", "Chía", "Ibagué", "Manizales", "Palmira", "Dosquebradas", "Jamundí"], "fmt": "n", "datasets": [{"label": "Visitas", "data": [224, 128, 35, 31, 31, 25, 11, 8, 4, 2, 2]}]}}, {"tipo": "chart", "ancho": "half", "fig": "04", "titulo": "Visitas realizadas por cadena", "sub": "Acumulado.", "chart": {"type": "bar", "horizontal": true, "labels": ["Éxito", "Jumbo", "Farmatodo", "Euro", "Mercaldas", "Droguerías", "Cañaveral", "Surtiplaza", "Mercamas", "Caribe", "Surtifamiliar", "La Montaña", "Mercacentro"], "fmt": "n", "datasets": [{"label": "Visitas", "data": [240, 141, 63, 15, 13, 11, 6, 5, 2, 2, 1, 1, 1]}]}}]}, {"num": "02", "titulo": "Ejecución de venta <em>(sell-out)</em>", "sub": "", "bloques": [{"tipo": "kpis", "items": [{"ico": "fa-cash-register", "lbl": "Tasa de cierre", "val": "99.2%", "note": "Sobre las 501 visitas acumuladas."}, {"ico": "fa-cart-shopping", "lbl": "Unidades vendidas", "val": "5.952", "note": "FS12: 290."}, {"ico": "fa-gauge-high", "lbl": "Unidades por visita", "val": "11.9", "note": "FS12: 9.4."}, {"ico": "fa-star", "lbl": "Producto ancla", "val": "1.943", "note": "Combo shampoo + acondicionador Ultimate Repair (uds.)."}]}, {"tipo": "chart", "fig": "05", "titulo": "Unidades vendidas por día", "sub": "El pico de la campaña fue el sábado 19 de septiembre (445 unidades).", "chart": {"type": "bar", "labels": ["4 sep", "5 sep", "6 sep", "11 sep", "12 sep", "13 sep", "18 sep", "19 sep", "20 sep", "25 sep", "26 sep", "27 sep", "2 oct", "3 oct", "4 oct", "9 oct", "10 oct", "11 oct", "16 oct", "17 oct", "18 oct", "23 oct", "24 oct", "25 oct", "30 oct", "31 oct", "1 nov", "6 nov", "7 nov", "8 nov", "13 nov", "14 nov", "15 nov", "20 nov", "21 nov", "22 nov"], "fmt": "n", "destacar": 7, "datasets": [{"label": "Unidades", "data": [80, 128, 124, 110, 174, 54, 225, 445, 338, 291, 291, 46, 146, 212, 240, 147, 201, 39, 180, 204, 222, 113, 111, 12, 155, 133, 120, 127, 236, 221, 112, 248, 177, 81, 183, 26]}]}}, {"tipo": "chart", "ancho": "half", "fig": "06", "titulo": "Marca vendida", "sub": "GLISS: 5.453 de las 5.952 unidades.", "chart": {"type": "bar", "horizontal": true, "labels": ["GLISS", "Balance", "Pnc", "Ig", "Bal", "Shampoo", "Palette", "Pal"], "fmt": "n", "datasets": [{"label": "Unidades", "data": [5453, 57, 55, 49, 43, 43, 37, 37]}]}}, {"tipo": "chart", "ancho": "half", "fig": "07", "titulo": "Top 10 productos vendidos", "sub": "Shampoo GLISS ultimate repairx400ml+acondic.x200ml lidera con 1.021 unidades.", "chart": {"type": "bar", "horizontal": true, "labels": ["Shampoo GLISS ultimate repairx400ml+acondic.x200ml", "GLISS OLEO Oil Elixir 75ml -25", "GLISS SHP Oil Nutritive 400ml", "GLISS SHP Ultimate Repair 400ml", "GLISS TRT Oil Nutritive Mask 400ml -25", "GLISS TRT Ultra Repair Mask 400ml -25", "GLISS ACO 200ml Oil Nutritive -25", "GLISS ACO Ultimate Repair 200ml", "GLISS ACO EXPRESS 200ml UltRepair -25", "GLISS SHP FullHairWonder 400ml -25"], "fmt": "n", "datasets": [{"label": "Unidades", "data": [1021, 551, 520, 484, 474, 467, 448, 438, 429, 391]}]}}, {"tipo": "tabla", "ancho": "half", "titulo": "Por ciudad", "cols": ["Ciudad", "Visitas", "Unidades", "Uds. / visita"], "rows": [["Bogotá", "224", "2.196", "9.8"], ["Medellín", "128", "1.710", "13.4"], ["Cali", "35", "528", "15.1"], ["Bucaramanga", "31", "415", "13.4"], ["Barranquilla", "31", "295", "9.5"], ["Chía", "25", "167", "6.7"], ["Ibagué", "11", "369", "33.5"], ["Manizales", "8", "67", "8.4"], ["Palmira", "4", "67", "16.8"], ["Dosquebradas", "2", "86", "43.0"], ["Jamundí", "2", "52", "26.0"]], "total": ["Total", "501", "5.952", "11.9"]}, {"tipo": "tabla", "ancho": "half", "titulo": "Por cadena", "cols": ["Cadena", "Canal", "Visitas", "Unidades"], "rows": [["Éxito", "Moderno", "240", "3.116"], ["Jumbo", "Moderno", "141", "1.473"], ["Farmatodo", "Moderno", "63", "490"], ["Mercaldas", "Tradicional", "13", "277"], ["Surtiplaza", "Tradicional", "5", "146"], ["Cañaveral", "Tradicional", "6", "87"], ["Mercamas", "Tradicional", "2", "86"], ["Droguerías", "Moderno", "11", "80"], ["Euro", "Moderno", "15", "76"], ["Caribe", "Tradicional", "2", "52"], ["Surtifamiliar", "Tradicional", "1", "35"], ["La Montaña", "Tradicional", "1", "21"], ["Mercacentro", "Tradicional", "1", "13"]], "total": ["Total", "", "501", "5.952"]}]}, {"num": "03", "titulo": "Premios <em>redimidos</em>", "sub": "Material de impulso que llegó a manos del consumidor en punto de venta. Solo lo redimido — no material recibido ni saldos.", "bloques": [{"tipo": "kpis", "items": [{"ico": "fa-cart-shopping", "lbl": "Unidades vendidas", "val": "5.952", "note": "Venta al consumidor final en las 501 visitas."}, {"ico": "fa-gift", "lbl": "Premios redimidos", "val": "3.067", "note": "El FS12 aporta 157."}, {"ico": "fa-scale-balanced", "lbl": "Premios por unidad", "val": "0.52", "note": "Premios entregados por cada unidad vendida."}, {"ico": "fa-trophy", "lbl": "Más redimido", "val": "Scrunchi", "note": "918 unidades acumuladas."}]}, {"tipo": "chart", "ancho": "half", "fig": "08", "titulo": "Ventas realizadas vs. premios entregados", "sub": "Por fin de semana.", "chart": {"type": "bar", "labels": ["FS1", "FS2", "FS3", "FS4", "FS5", "FS6", "FS7", "FS8", "FS9", "FS10", "FS11", "FS12"], "fmt": "n", "datasets": [{"label": "Unidades vendidas", "data": [332, 338, 1008, 628, 598, 387, 606, 236, 408, 584, 537, 290]}, {"label": "Premios entregados", "data": [197, 125, 422, 279, 333, 229, 375, 110, 246, 314, 280, 157]}]}}, {"tipo": "chart", "ancho": "half", "fig": "09", "titulo": "Premios redimidos por referencia", "sub": "Con detalle por referencia.", "chart": {"type": "bar", "labels": ["Scrunchi", "Gorro", "Funda", "Cepillo"], "fmt": "n", "datasets": [{"label": "Unidades", "data": [918, 742, 764, 643]}]}}, {"tipo": "tabla", "titulo": "Detalle por referencia", "cols": ["Código", "Referencia", "FS1-FS11", "FS12", "Acumulado", "% del mix"], "rows": [["HNK000909", "Scrunchi en bolsa celofán GLISS 2026", "902", "16", "918", "29.9%"], ["HNK000908", "Funda con caja GLISS 2026", "714", "50", "764", "24.9%"], ["HNK001051", "Gorro con caja GLISS", "695", "47", "742", "24.2%"], ["HNK000907", "Cepillo con caja GLISS 2026", "599", "44", "643", "21.0%"]], "total": ["Total", "4 referencias", "2.910", "157", "3.067", "100%"], "nota": ""}]}, {"num": "04", "titulo": "Voz del <em>consumidor</em>", "sub": "2.534 encuestas con detalle en la Data Normalizada — 5.1 personas por visita.", "bloques": [{"tipo": "chart", "ancho": "half", "fig": "10", "titulo": "¿Conocía la marca?", "sub": "60.4% ya la conocía antes de la visita.", "chart": {"type": "doughnut", "labels": ["Sí la conocía", "No la conocía"], "fmt": "n", "datasets": [{"label": "Encuestas", "data": [1531, 994]}]}}, {"tipo": "chart", "ancho": "half", "fig": "11", "titulo": "Uso actual de la marca", "sub": "", "chart": {"type": "doughnut", "labels": ["Nunca la ha probado", "La usa actualmente", "La ha probado antes"], "fmt": "n", "datasets": [{"label": "Encuestas", "data": [1088, 867, 571]}]}}, {"tipo": "chart", "ancho": "half", "fig": "12", "titulo": "¿Por dónde conoció la marca?", "sub": "Respuesta múltiple.", "chart": {"type": "bar", "horizontal": true, "labels": ["TV", "Punto de venta", "Redes sociales", "Recomendación", "Revistas", "Radio", "Otro"], "fmt": "n", "datasets": [{"label": "Menciones", "data": [630, 564, 449, 367, 91, 29, 19]}]}}, {"tipo": "chart", "ancho": "half", "fig": "13", "titulo": "Percepción de la visita", "sub": "83.1% se fue con una percepción positiva.", "chart": {"type": "bar", "horizontal": true, "labels": ["Le gustó", "Le encantó", "Ni fu ni fa", "No le gustó"], "fmt": "n", "datasets": [{"label": "Encuestas", "data": [1401, 704, 372, 49]}]}}, {"tipo": "chart", "ancho": "half", "fig": "14", "titulo": "Qué piden los consumidores", "sub": "Respuesta múltiple.", "chart": {"type": "bar", "horizontal": true, "labels": ["Promociones y combos", "Mejor precio", "Mejor resultado", "Mejor fragancia", "Mayor disponibilidad", "Empaque/presentación"], "fmt": "n", "datasets": [{"label": "Menciones", "data": [747, 615, 582, 403, 315, 292]}]}}, {"tipo": "chart", "ancho": "half", "fig": "15", "titulo": "Tipo de cabello reportado", "sub": "Respuesta múltiple.", "chart": {"type": "bar", "horizontal": true, "labels": ["Liso", "Ondulado", "Teñido/Con color", "Seco", "Graso", "Rizado", "Dañado", "Afro"], "fmt": "n", "datasets": [{"label": "Menciones", "data": [659, 415, 407, 272, 243, 227, 191, 99]}]}}, {"tipo": "tabla", "titulo": "Producto de interés y valoración", "cols": ["Producto de interés", "Encuestas", "%"], "rows": [["Shampoo", "1.137", "45.0%"], ["Tratamiento/Mascarilla", "563", "22.3%"], ["Acondicionador", "532", "21.1%"], ["Coloración", "197", "7.8%"], ["Otro", "52", "2.1%"], ["Styling", "46", "1.8%"]], "nota": "Opinión promedio del producto: 3.95 / 5 (4.02 en el FS12)."}]}, {"num": "05", "titulo": "Actividad de la <em>competencia</em>", "sub": "309 de las 501 visitas (61.7%) registraron actividad de marcas competidoras.", "bloques": [{"tipo": "kpis", "items": [{"ico": "fa-binoculars", "lbl": "Visitas con competencia", "val": "61.7%", "note": "309 de 501 visitas."}, {"ico": "fa-camera", "lbl": "Evidencias registradas", "val": "791", "note": "Según el registro de competencia."}, {"ico": "fa-tags", "lbl": "Táctica más usada", "val": "Descuento", "note": "603 de 791 evidencias (76.2%)."}, {"ico": "fa-flag", "lbl": "Competidor más nombrado", "val": "Elvive / L'Oréal", "note": "Elvive / L'Oréal (182), Pantene (172), Dove (84)"}]}, {"tipo": "chart", "ancho": "half", "fig": "16", "titulo": "Marcas competidoras más mencionadas", "sub": "Evidencias por marca.", "chart": {"type": "bar", "horizontal": true, "labels": ["Elvive / L'Oréal", "Pantene", "Dove", "Herbal Essences", "Head & Shoulders", "Savital", "Sedal", "Nutribela"], "fmt": "n", "datasets": [{"label": "Evidencias", "data": [182, 172, 84, 82, 56, 47, 32, 25]}]}}, {"tipo": "chart", "ancho": "half", "fig": "17", "titulo": "Tipo de actividad", "sub": "", "chart": {"type": "doughnut", "labels": ["Descuento / Promoción", "Exhibición especial", "Mercaderista en el punto", "Degustación / Impulso", "Otro"], "fmt": "n", "datasets": [{"label": "Evidencias", "data": [603, 118, 38, 29, 3]}]}}]}], "galeria": [{"url": "https://lh3.googleusercontent.com/d/1vprw38RSqEA6YZjg8w_1MPp0_FcZ9itS=w1600", "pdv": "", "meta": ""}, {"url": "https://lh3.googleusercontent.com/d/1pu6p5PZYZwEBcljLUoNUy4RuEVQQuiMI=w1600", "pdv": "", "meta": ""}, {"url": "https://lh3.googleusercontent.com/d/1PRV10KVnffyqJUPCqnp-ui_4F-lZ39ZR=w1600", "pdv": "", "meta": ""}, {"url": "https://lh3.googleusercontent.com/d/17P7X8jmNqEsT044whqQ2Hh8zyD7tlFsZ=w1600", "pdv": "", "meta": ""}, {"url": "https://lh3.googleusercontent.com/d/1sFqHTWK-_B_flNfrurYZmfp1uLT6FCwh=w1600", "pdv": "", "meta": ""}, {"url": "https://lh3.googleusercontent.com/d/1ARiV3wKOebTCKODhkzfbUXuN6QisnsYT=w1600", "pdv": "", "meta": ""}, {"url": "https://lh3.googleusercontent.com/d/1WZU-tqS52zd4u3hMtAXvrheiFNOOzggM=w1600", "pdv": "", "meta": ""}, {"url": "https://lh3.googleusercontent.com/d/1-kHSeLMnkzqzxefhN3s2Ryvu3uzqqGxS=w1600", "pdv": "", "meta": ""}, {"url": "https://lh3.googleusercontent.com/d/1EUmHzkB3nLFPtFBcAUem-U898mt955d2=w1600", "pdv": "", "meta": ""}, {"url": "https://lh3.googleusercontent.com/d/1vM_umfBY44smsWgtpQfcQIQN1Que7i2i=w1600", "pdv": "", "meta": ""}, {"url": "https://lh3.googleusercontent.com/d/1n8kYOtrsXUXD7c-BV8jHL3Ukwdi5C5lc=w1600", "pdv": "", "meta": ""}, {"url": "https://lh3.googleusercontent.com/d/1QSrONggfHwhiczQBkakJ10_3ZrSHHV28=w1600", "pdv": "", "meta": ""}, {"url": "https://lh3.googleusercontent.com/d/1kqNipZqYLAFwg1_y0GPCkuDnUiEJWfDZ=w1600", "pdv": "", "meta": ""}, {"url": "https://lh3.googleusercontent.com/d/1whCQBXI4VNoJjbvmBYO10LXF1GIRgiun=w1600", "pdv": "", "meta": ""}, {"url": "https://lh3.googleusercontent.com/d/1-9lsOQINcSnMzSVsIZoIcB8Jk7h1Fzvq=w1600", "pdv": "", "meta": ""}, {"url": "https://lh3.googleusercontent.com/d/1mm51y2dGNGpOL4RaBkWWImhFvJ0D6T4d=w1600", "pdv": "", "meta": ""}, {"url": "https://lh3.googleusercontent.com/d/1pvkwt4rV3sbZdUCemXcasLKNpl-jP07t=w1600", "pdv": "", "meta": ""}, {"url": "https://lh3.googleusercontent.com/d/19N0hvsTi2p2CkRRxU3doEYHeYMCRdJH6=w1600", "pdv": "", "meta": ""}, {"url": "https://lh3.googleusercontent.com/d/1WdhCe2IGdR1kZ3YRX-Zza8cFBeaFxq7C=w1600", "pdv": "", "meta": ""}, {"url": "https://lh3.googleusercontent.com/d/1s-4fAMuq-8AA3bdwp-SMa3KIh13nyjN0=w1600", "pdv": "", "meta": ""}, {"url": "https://lh3.googleusercontent.com/d/1nYISefHOLkVbviCQr1yaIFqf0m8Rx9Hh=w1600", "pdv": "", "meta": ""}, {"url": "https://lh3.googleusercontent.com/d/1QpCK8UqKBkxI7DCxNf1XZHiyQbfjCxkE=w1600", "pdv": "", "meta": ""}, {"url": "https://lh3.googleusercontent.com/d/1QbLzofBxJO-Qf10KnT4IFUCBuYrP03sm=w1600", "pdv": "", "meta": ""}, {"url": "https://lh3.googleusercontent.com/d/1bRZXVTA_LD-HPb7MrO1-p8LfmWIf6L86=w1600", "pdv": "", "meta": ""}, {"url": "https://lh3.googleusercontent.com/d/1uBbtNK4svlfkYlyvhTiS9eUIsH4KHLYC=w1600", "pdv": "", "meta": ""}, {"url": "https://lh3.googleusercontent.com/d/1v3QAIJzUzCCK0ec8nFyzSz2t1ZmAcMHI=w1600", "pdv": "", "meta": ""}, {"url": "https://lh3.googleusercontent.com/d/1a9L2dB17NExURiK5Fy9FH6F3Ql_6ERyl=w1600", "pdv": "", "meta": ""}, {"url": "https://lh3.googleusercontent.com/d/1NdkA4dH482U4pVBdlbnrt-BW4lVc43ko=w1600", "pdv": "", "meta": ""}, {"url": "https://lh3.googleusercontent.com/d/1j70TR4I6J9GordtB9msJwzPKoC61MBEe=w1600", "pdv": "", "meta": ""}, {"url": "https://lh3.googleusercontent.com/d/14NVtj7I6f4_yJ9dIQFAOaoGJi2l-gJ-S=w1600", "pdv": "", "meta": ""}], "insights": [{"k": "Insight 01", "t": "Ruta y cobertura", "p": "305 de 305 turnos de FS1 a FS8 con cobertura confirmada, contando reposiciones. El FS12 sumó 31 visitas en 27 PDVs."}, {"k": "Insight 02", "t": "Cierre y mezcla", "p": "FS12: 31 de 31 visitas con venta y 100.0% de la mezcla en GLISS. En el acumulado, 99.2% de tasa de cierre y 91.6% de participación GLISS."}, {"k": "Insight 03", "t": "Reconocimiento de marca", "p": "El 64.0% de los consumidores del FS12 ya conocía la marca. En el acumulado, el 60.4% la conocía antes de la visita."}], "notas": [], "pie": {"cobertura": ["6 ciudades activas: Bogotá, Medellín, Cali, Bucaramanga, Barranquilla, Chía en el FS12.", "501 visitas acumuladas. 305 de 305 turnos de FS1 a FS8 con cobertura confirmada, contando reposiciones."], "metodologia": ["Captura en campo por visita: ingreso, ventas, premios, voz del consumidor, competencia y salida.", "Cifras de la Data Normalizada (FS1 a FS12).", "La cobertura se cruza contra el cronograma de la ruta (MDF)."], "emision": ["Acumulado de doce fines de semana de ejecución.", "Periodo: 4 de septiembre al 22 de noviembre 2026.", "Documento interno · Henkel GLISS."], "barra": "501 visitas · 64 PDVs activos · 6 ciudades"}};
+/*DATA_END*/
+
+/* ================= MOTOR DE RENDER — NO EDITAR ================= */
+const $ = id => document.getElementById(id);
+const D = DATA;
+const esc = s => String(s ?? '');
+document.title = D.titulo;
+$('heroSub').textContent = D.subtitulo;
+$('heroFacts').innerHTML = D.heroFacts.map(([n, l]) => `<div><div class="n">${n}</div><div class="l">${l}</div></div>`).join('');
+$('execKicker').textContent = D.kicker;
+const item = (p, i, num = true) => `<div class="exec-item"><div class="ico"><i class="fa-solid ${p.ico || 'fa-circle-info'}"></i></div><div><h4>${num ? String(i + 1).padStart(2, '0') + ' · ' : ''}${p.titulo || p.t}</h4><p>${p.texto || p.p}</p></div></div>`;
+$('execGrid').innerHTML = D.puntos.map((p, i) => item(p, i)).join('');
+$('spotlight').innerHTML = D.spot.map(s => `<div class="sp-stat"><div class="sp-lbl">${s.lbl}</div><h2>${s.val}${s.unit ? `<small>${s.unit}</small>` : ''}</h2><div class="sp-sub">${s.sub}</div></div>`).join('');
+if (D.notas.length) $('notasDato').innerHTML = `<div class="table-container full" style="margin-bottom:26px;background:#fef9ec;border-left:3px solid #fbbf24;"><h3 style="color:#92400e;margin:0 0 6px">Calidad del dato</h3>${D.notas.map(n => `<p class="tbl-sub" style="margin:4px 0">${n}</p>`).join('')}</div>`;
+
+/* Componentes */
+let figs = [];
+const kpis = b => `<div class="kpi-row" style="grid-template-columns:repeat(${b.items.length},1fr)">${b.items.map(k => `<div class="kpi-card ${k.cls || ''}"><div class="k-ico"><i class="fa-solid ${k.ico}"></i></div><div class="k-lbl">${k.lbl}</div><h3>${k.val}</h3><div class="k-note">${k.note || ''}</div></div>`).join('')}</div>`;
+const chart = b => { const id = 'ch' + figs.length; figs.push([id, b.chart]); const h = b.chart.horizontal ? Math.max(260, b.chart.labels.length * 30 + 40) : 300;
+  return `<div class="chart-box"><div class="cb-head"><h3>${b.titulo}</h3><div class="cb-tag">Fig. ${b.fig}</div></div><p class="cb-sub">${b.sub || ''}</p><div style="height:${h}px;position:relative"><canvas id="${id}"></canvas></div></div>`; };
+const tabla = b => `<div class="table-container ${b.ancho === 'half' ? '' : 'full'}" style="margin-bottom:26px"><h3>${b.titulo}</h3>${b.sub ? `<p class="tbl-sub">${b.sub}</p>` : ''}<div class="table-scroll" style="overflow-x:auto;max-height:none"><table class="table-data ${b.total ? '' : 'no-total'}"><tr>${b.cols.map((c, i) => `<th class="${i ? 'num' : ''}">${c}</th>`).join('')}</tr>${b.rows.map(r => `<tr>${r.map((c, i) => `<td class="${i ? 'num' : ''}">${esc(c)}</td>`).join('')}</tr>`).join('')}${b.total ? `<tr>${b.total.map((c, i) => `<td class="${i ? 'num' : ''}">${esc(c)}</td>`).join('')}</tr>` : ''}</table></div>${b.nota ? `<p class="tbl-sub" style="margin:14px 0 0">${b.nota}</p>` : ''}</div>`;
+const semana = b => `<section class="exec-summary" style="margin-top:10px;"><div class="exec-head"><span class="kicker">${b.kicker}</span><h2>${b.titulo}</h2></div><div class="exec-grid">${b.items.map((p, i) => item({ ico: ['fa-map', 'fa-rotate', 'fa-cash-register', 'fa-gift', 'fa-comments', 'fa-flag'][i], titulo: p.t, texto: p.p }, i, false)).join('')}</div></section>`;
+const bloque = b => b.tipo === 'kpis' ? kpis(b) : b.tipo === 'chart' ? chart(b) : b.tipo === 'tabla' ? tabla(b) : b.tipo === 'semana' ? semana(b) : '';
+let html = '';
+D.secciones.forEach(s => {
+  html += `<div class="section-hero"><div class="num">${s.num}</div><h2 class="section-title">${s.titulo}</h2></div>${s.sub ? `<p class="section-sub">${s.sub}</p>` : ''}`;
+  for (let i = 0; i < s.bloques.length; i++) {
+    const b = s.bloques[i], n = s.bloques[i + 1];
+    if (b.ancho === 'half' && n && n.ancho === 'half') {
+      const wrap = b.tipo === 'tabla' ? 'table-wrapper' : 'chart-split';
+      html += `<div class="${wrap}">${bloque(b)}${bloque(n)}</div>`; i++;
+    } else html += bloque(b);
+  }
+});
+$('secciones').innerHTML = html;
+$('insights').innerHTML = D.insights.map((k, i) => `<div class="kpi-card pos"><div class="k-ico"><i class="fa-solid ${['fa-calendar-check', 'fa-bullseye', 'fa-users'][i] || 'fa-lightbulb'}"></i></div><div class="k-lbl">${k.k}</div><h3>${k.t}</h3><div class="k-note">${k.p}</div></div>`).join('');
+const para = a => a.map(t => `<p>${t}</p>`).join('');
+$('fCob').innerHTML = para(D.pie.cobertura); $('fMet').innerHTML = para(D.pie.metodologia); $('fEmi').innerHTML = para(D.pie.emision); $('fBarra').textContent = D.pie.barra;
+
+/* Gráficas — paleta Henkel/PQP roja */
+const PAL = ['#E1000F', '#241c1c', '#ff8a8a', '#a37b3a', '#7a0000', '#6b4e88', '#0e7a5f', '#a86a1a'];
+Chart.register(ChartDataLabels);
+Chart.defaults.font.family = 'Plus Jakarta Sans'; Chart.defaults.color = '#8a7a7b';
+const font = { weight: '600', size: 11 };
+const F = { n: v => v == null ? '' : Math.round(v).toLocaleString('es-CO'), pct: v => v == null ? '' : v.toFixed(1) + '%' };
+figs.forEach(([id, c]) => {
+  const fmt = F[c.fmt] || F.n, multi = c.datasets.length > 1, dona = c.type === 'doughnut';
+  const ds = c.datasets.map((d, k) => ({ label: d.label, data: d.data, borderRadius: dona ? 0 : 3, barPercentage: .7, tension: 0, pointRadius: 4, spanGaps: true,
+    backgroundColor: dona ? PAL : multi ? PAL[k] : (c.destacar != null ? d.data.map((_, i) => i === c.destacar ? '#fbbf24' : PAL[0]) : PAL[0]),
+    borderColor: dona ? '#fff' : multi ? PAL[k] : PAL[0] }));
+  const valor = { grid: { color: '#f1e8e8', drawTicks: false }, ticks: { font, padding: 6, callback: v => fmt(v) }, border: { display: false }, beginAtZero: c.fmt !== 'pct' };
+  const cat = { grid: { display: false }, ticks: { font, padding: 6, autoSkip: true, maxRotation: 50 }, border: { display: false } };
+  new Chart(document.getElementById(id), { type: c.type, data: { labels: c.labels, datasets: ds },
+    options: { maintainAspectRatio: false, indexAxis: c.horizontal ? 'y' : 'x', layout: { padding: { top: 20, right: c.horizontal ? 40 : 0 } },
+      plugins: { legend: { display: multi || dona, position: 'bottom', labels: { font, boxWidth: 12 } },
+        datalabels: { display: ctx => !dona && ctx.dataset.data[ctx.dataIndex] != null && (c.labels.length <= 14 || !multi), color: '#241c1c', anchor: 'end', align: c.horizontal ? 'right' : 'end', font: { weight: '800', size: 10 }, formatter: fmt } },
+      scales: dona ? {} : (c.horizontal ? { x: valor, y: cat } : { x: cat, y: valor }) } });
+});
+
+/* Carrusel */
+const G = D.galeria; let ci = 0, timer;
+if (!G.length) document.querySelector('.carousel')?.remove();
+function show() { const v = G[ci], img = $('carImg'); img.style.opacity = 0; const pre = new Image(); pre.referrerPolicy = 'no-referrer'; pre.onload = () => { img.src = v.url; img.style.opacity = 1; }; pre.src = v.url;
+  $('carImgPrev').src = G[(ci - 1 + G.length) % G.length].url; $('carImgNext').src = G[(ci + 1) % G.length].url; $('carPdv').textContent = v.pdv; $('carMeta').textContent = v.meta; $('carCounter').textContent = `${ci + 1} / ${G.length}`; }
+if (G.length) { const step = d => { ci = (ci + d + G.length) % G.length; show(); clearInterval(timer); timer = setInterval(() => step(1), 4000); };
+  $('carNext').onclick = e => { e.stopPropagation(); step(1); }; $('carPrev').onclick = e => { e.stopPropagation(); step(-1); };
+  $('carStage').onclick = () => step(1); $('carSideLeft').onclick = () => step(-1); $('carSideRight').onclick = () => step(1); show(); timer = setInterval(() => step(1), 4000); }
+</script>
+</body>
+</html>
